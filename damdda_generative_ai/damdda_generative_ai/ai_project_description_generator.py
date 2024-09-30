@@ -1,4 +1,8 @@
+# Response Console Print Test.
+
 import requests
+import json
+
 
 class CompletionExecutor:
     def __init__(self, host, api_key, api_key_primary_val, request_id):
@@ -16,17 +20,56 @@ class CompletionExecutor:
             'Accept': 'text/event-stream'
         }
 
+        full_message = ""
+        ai_filter_data = []
+
         try:
             # 타임아웃 설정 (예: 30초)
             with requests.post(self._host + '/testapp/v1/chat-completions/HCX-003',
                                headers=headers, json=completion_request, stream=True, timeout=30) as r:
                 for line in r.iter_lines():
                     if line:
-                        print(line.decode("utf-8"))
+                        decoded_line = line.decode("utf-8").strip()
+
+                        # JSON으로 시작되지 않는 경우 건너뜀
+                        if not decoded_line.startswith("data:"):
+                            continue
+
+                        try:
+                            # "data:"를 제거한 부분을 JSON으로 파싱
+                            json_data = decoded_line.split("data:")[-1].strip()
+
+                            # 비어있는 데이터 확인
+                            if not json_data:
+                                continue
+
+                            data = json.loads(json_data)
+
+                            # 완전한 메시지 데이터를 수집
+                            if "message" in data and data["message"]["role"] == "assistant":
+                                full_message += data["message"]["content"]
+
+                            # AI 필터 데이터를 누적해서 수집
+                            if "aiFilter" in data:
+                                ai_filter_data.extend(data["aiFilter"])
+
+                        except json.JSONDecodeError:
+                            print(f"JSON 디코딩 실패: {decoded_line}")
+                            continue
+
         except requests.exceptions.Timeout:
             print("요청이 시간 내에 완료되지 않았습니다.")
         except requests.exceptions.RequestException as e:
             print(f"요청 중 오류 발생: {e}")
+
+        # 이스케이프 문자가 해석된 상태로 출력
+        print("=== 완성된 메시지 ===")
+        print(full_message)  # 이스케이프 문자가 실제로 해석된 상태로 출력
+
+        # AI 필터 정보도 함께 출력 (JSON 포맷)
+        if ai_filter_data:
+            print("\n=== AI 필터 정보 ===")
+            print(json.dumps(ai_filter_data, indent=4, ensure_ascii=False))
 
 
 if __name__ == '__main__':
@@ -82,5 +125,4 @@ if __name__ == '__main__':
     )
 
     # 생성된 프롬프트 출력 및 실행
-    print("생성된 프롬프트: ", prompt)
     completion_executor.execute(request_data)
