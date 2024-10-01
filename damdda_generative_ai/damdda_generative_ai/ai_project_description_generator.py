@@ -76,6 +76,41 @@ def generate_completion():
     data = request.json
     print(f"사용자 요청 데이터: {data}")
 
+    # 카테고리, 제목, 태그, 설명 추출
+    category = data.get("category", "")
+    title = data.get("title", "")
+    tags = data.get("tags", [])
+    description = data.get("description", "")
+
+    # 태그 리스트를 문자열로 변환
+    tags_list = [tag.strip() for tag in tags]
+
+    # 최적화된 프롬프트 구성
+    prompt = [
+        {
+            "role": "system",
+            "content": f"""다음 정보를 바탕으로 크라우드펀딩 프로젝트 상세 페이지를 작성하세요:
+            카테고리: {category}
+            제목: {title}
+            태그: {', '.join(tags_list)}
+            설명: {description}
+            톤은 전문적이면서도 친근해야 하며, 고객의 관심을 끌 수 있는 마케팅 문구를 포함하세요."""
+        }
+    ]
+
+    # API 요청 데이터 구성
+    request_data = {
+        'messages': prompt,
+        'topP': 0.8,
+        'topK': 0,
+        'maxTokens': 523,
+        'temperature': 0.5,
+        'repeatPenalty': 1.5,
+        'stopBefore': [],
+        'includeAiFilters': True,
+        'seed': 0
+    }
+
     completion_executor = CompletionExecutor(
         host='https://clovastudio.stream.ntruss.com',
         api_key='NTA0MjU2MWZlZTcxNDJiY44jeuohr7Mbc05w5ZuPul2cHopJKX0mgoeUHclkAq59',
@@ -83,7 +118,7 @@ def generate_completion():
         request_id='4baf4708-3413-47da-aa5d-a194f5b56ba3'
     )
     
-    result = completion_executor.execute(data)
+    result = completion_executor.execute(request_data)
 
     # 처리 후 결과를 콘솔에 출력
     print(f"최종 결과: {result}")
