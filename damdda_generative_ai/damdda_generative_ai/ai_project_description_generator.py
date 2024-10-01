@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 import requests
 import json
 
@@ -47,7 +47,7 @@ class CompletionExecutor:
 
                             if "message" in data and data["message"]["role"] == "assistant":
                                 new_message = data["message"]["content"]
-                                
+
                                 # 중복 방지를 위해 full_message에 추가된 메시지인지 확인
                                 if new_message not in full_message:
                                     full_message += new_message
@@ -72,9 +72,9 @@ class CompletionExecutor:
 # GET 요청을 위한 간단한 상태 확인 엔드포인트 추가
 @app.route('/', methods=['GET'])
 def home():
-    return "Flask server is running. Please use POST /completion for API requests."
+    return "Flask server is running. Invalid access. Please try again."
 
-@app.route('/completion', methods=['POST'])
+@app.route('/api/generative-ai/project-description', methods=['POST'])
 def generate_completion():
     # 사용자가 보낸 요청 데이터를 콘솔에 출력
     data = request.json
@@ -94,8 +94,8 @@ def generate_completion():
         {
             "role": "system",
             "content": f"""다음 정보를 바탕으로 크라우드펀딩 프로젝트 상세 페이지를 작성하세요:
-            카테고리: {category}
             제목: {title}
+            카테고리: {category}
             태그: {', '.join(tags_list)}
             설명: {description}
             톤은 전문적이면서도 친근해야 하며, 고객의 관심을 끌 수 있는 마케팅 문구를 포함하세요."""
@@ -126,8 +126,24 @@ def generate_completion():
 
     # 처리 후 결과를 콘솔에 출력
     print(f"최종 결과: {result}")
-    
-    return jsonify(result)
+
+    # full_message에서 문제될 수 있는 줄바꿈이나 특수 문자 이스케이프 처리
+    full_message = result["full_message"].replace("\n", "\\n").replace("\t", "\\t")
+
+    try:
+        # 유니코드 이스케이프 해제
+        result['full_message'] = json.loads(f'"{full_message}"')
+    except json.JSONDecodeError as e:
+        print(f"JSON 디코딩 실패: {e}")
+        result['full_message'] = full_message  # 디코딩이 실패하면 그대로 유지
+
+    # UTF-8로 인코딩된 응답 반환
+    response = Response(
+        response=json.dumps(result, ensure_ascii=False),  # ensure_ascii=False로 한글 유니코드 방지
+        content_type='application/json; charset=utf-8'
+    )
+    return response
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
