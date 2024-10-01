@@ -1,18 +1,18 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='damdda-generative-ai',
-    version='0.1.0',
-    description='Generative AI API for Project Description',
-    packages=find_packages(include=['damdda_generative_ai', 'damdda_generative_ai.*']),
+    name='damdda_generative_ai',  # The name of your package
+    version='1.0',  # Version of your package
+    packages=find_packages(),  # Automatically find and include all packages in the project
+    include_package_data=True,  # Include additional files specified in MANIFEST.in
     install_requires=[
-        'Flask==2.0.3',
-        'requests==2.25.1'
+        'Flask',  # Web framework
+        'requests'  # HTTP requests library
     ],
     entry_points={
         'console_scripts': [
-            'start-server=damdda_generative_ai.scripts.server:main',  # Adjust path based on actual script location
+            # Define a command-line script `run-server` that runs the `main` function in run.py
+            'run-server=damdda_generative_ai.run:main',
         ],
     },
-    python_requires='>=3.6',
 )
