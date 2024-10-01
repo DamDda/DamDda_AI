@@ -46,7 +46,11 @@ class CompletionExecutor:
                             print(f"API 응답 데이터: {data}")
 
                             if "message" in data and data["message"]["role"] == "assistant":
-                                full_message += data["message"]["content"]
+                                new_message = data["message"]["content"]
+                                
+                                # 중복 방지를 위해 full_message에 추가된 메시지인지 확인
+                                if new_message not in full_message:
+                                    full_message += new_message
 
                             if "aiFilter" in data:
                                 ai_filter_data.extend(data["aiFilter"])
