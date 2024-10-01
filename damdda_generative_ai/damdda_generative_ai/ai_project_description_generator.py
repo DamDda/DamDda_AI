@@ -42,6 +42,9 @@ class CompletionExecutor:
 
                             data = json.loads(json_data)
 
+                            # 콘솔에 API에서 받은 데이터를 출력
+                            print(f"API 응답 데이터: {data}")
+
                             if "message" in data and data["message"]["role"] == "assistant":
                                 full_message += data["message"]["content"]
 
@@ -69,7 +72,10 @@ def home():
 
 @app.route('/completion', methods=['POST'])
 def generate_completion():
+    # 사용자가 보낸 요청 데이터를 콘솔에 출력
     data = request.json
+    print(f"사용자 요청 데이터: {data}")
+
     completion_executor = CompletionExecutor(
         host='https://clovastudio.stream.ntruss.com',
         api_key='NTA0MjU2MWZlZTcxNDJiY44jeuohr7Mbc05w5ZuPul2cHopJKX0mgoeUHclkAq59',
@@ -78,6 +84,10 @@ def generate_completion():
     )
     
     result = completion_executor.execute(data)
+
+    # 처리 후 결과를 콘솔에 출력
+    print(f"최종 결과: {result}")
+    
     return jsonify(result)
 
 if __name__ == '__main__':
