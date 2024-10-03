@@ -8,7 +8,8 @@ WORKDIR /app
 COPY requirements.txt .
 
 # 필요한 Python 패키지들을 설치
-RUN pip install --no-cache-dir -r requirements.txt
+# 'pywin32' 패키지는 Windows 전용이므로 설치 과정에서 제외 (Linux에서 설치 불가)
+RUN pip install --no-cache-dir -r <(grep -v "pywin32" requirements.txt)
 
 # 현재 디렉토리의 모든 파일을 컨테이너 내 작업 디렉토리로 복사
 COPY . .
