@@ -21,7 +21,9 @@ pipeline {
                 sshagent (credentials: ['jenkins-ssh-credentials']) {
                     sh '''
                         ssh damdda@211.188.48.96 << EOF
-                            # Log in to Docker Hub on the remote server.
+                            # Log in to Docker Hub on the remote server using environment variables
+                            export DOCKER_USERNAME='${DOCKER_USERNAME}'
+                            export DOCKER_PASSWORD='${DOCKER_PASSWORD}'
                             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
                             
                             # Stop the running container if it exists.
