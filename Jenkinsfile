@@ -23,7 +23,7 @@ pipeline {
                 // SSH into the remote server and run Docker commands.
                 sshagent (credentials: ['jenkins-ssh-credentials']) {
                     sh '''
-                        ssh user@211.188.48.96 << EOF
+                        ssh damdda@211.188.48.96 << EOF
                             # Stop the running container if it exists.
                             docker stop damdda-ai-flask-server || true
                             # Remove the existing container.
