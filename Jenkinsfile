@@ -4,15 +4,17 @@ pipeline {
         stage('Docker Login') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-idps-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    // Log in to Docker Hub locally
                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
             }
         }
         stage('Build Docker Image') {
             steps {
+                // Build the Docker image
                 sh 'docker build -t docker.io/pmhchris/damdda-ai-flask-server:latest .'
                 
-                // Push the Docker image to Docker Hub.
+                // Push the Docker image to Docker Hub
                 sh 'docker push docker.io/pmhchris/damdda-ai-flask-server:latest'
             }
         }
@@ -21,20 +23,18 @@ pipeline {
                 sshagent (credentials: ['jenkins-ssh-credentials']) {
                     sh '''
                         ssh damdda@211.188.48.96 << EOF
-                            # Log in to Docker Hub on the remote server using environment variables
-                            export DOCKER_USERNAME='${DOCKER_USERNAME}'
-                            export DOCKER_PASSWORD='${DOCKER_PASSWORD}'
-                            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                            # Log in to Docker Hub
+                            docker login -u '${DOCKER_USERNAME}' -p '${DOCKER_PASSWORD}'
                             
-                            # Stop the running container if it exists.
+                            # Stop the running container if it exists
                             docker stop damdda-ai-flask-server || true
-                            # Remove the existing container.
+                            # Remove the existing container
                             docker rm damdda-ai-flask-server || true
                             
-                            # Pull the latest Docker image from Docker Hub.
+                            # Pull the latest image from Docker Hub
                             docker pull docker.io/pmhchris/damdda-ai-flask-server:latest
                             
-                            # Run a new container from the pulled image, exposing it on port 5000.
+                            # Run a new container from the pulled image
                             docker run -d --name damdda-ai-flask-server -p 5000:5000 docker.io/pmhchris/damdda-ai-flask-server:latest
                         EOF
                     '''
