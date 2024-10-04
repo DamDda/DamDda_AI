@@ -21,6 +21,9 @@ pipeline {
                 sshagent (credentials: ['jenkins-ssh-credentials']) {
                     sh '''
                         ssh damdda@211.188.48.96 << EOF
+                            # Log in to Docker Hub on the remote server.
+                            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                            
                             # Stop the running container if it exists.
                             docker stop damdda-ai-flask-server || true
                             # Remove the existing container.
