@@ -12,10 +12,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 // Build the Docker image locally on the Jenkins server and tag it as 'damdda-ai-flask-server'.
-                sh 'docker build -t docker.io/pmhChris/damdda-ai-flask-server .'
+                sh 'docker build -t docker.io/pmhchris/damdda-ai-flask-server .'
                 
                 // Push the Docker image to Docker Hub.
-                sh 'docker push docker.io/pmhChris/damdda-ai-flask-server'
+                sh 'docker push docker.io/pmhchris/damdda-ai-flask-server'
             }
         }
         stage('Deploy to Remote Server') {
@@ -30,10 +30,10 @@ pipeline {
                             docker rm damdda-ai-flask-server || true
                             
                             # Pull the latest Docker image from Docker Hub.
-                            docker pull docker.io/pmhChris/damdda-ai-flask-server
+                            docker pull docker.io/pmhchris/damdda-ai-flask-server
                             
                             # Run a new container from the pulled image, exposing it on port 5000.
-                            docker run -d --name damdda-ai-flask-server -p 5000:5000 docker.io/pmhChris/damdda-ai-flask-server
+                            docker run -d --name damdda-ai-flask-server -p 5000:5000 docker.io/pmhchris/damdda-ai-flask-server
                         EOF
                     '''
                 }
