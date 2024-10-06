@@ -16,7 +16,7 @@ def test():
     # Temporary route for server health check
     # This route is used to check if the server is up and running.
     # It is for testing purposes and can be removed or replaced in production.
-    return jsonify({"status": "success", "message": "Server is working correctly,", "version": "0.1"})
+    return jsonify({"status": "success", "message": "Server is working correctly,", "version": "0.2"})
 
 @main_bp.route('/api/generative-ai/project-description', methods=['POST'])
 def generate_completion():
