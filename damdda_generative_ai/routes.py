@@ -11,11 +11,18 @@ def home():
     # Basic route to check if the server is running
     return "Flask server is running. Invalid access. Please try again."
 
+@main_bp.route('/test', methods=['GET'])
+def test():
+    # Temporary route for server health check
+    # This route is used to check if the server is up and running.
+    # It is for testing purposes and can be removed or replaced in production.
+    return jsonify({"status": "success", "message": "Server is working correctly,", "version": "0.1"})
+
 @main_bp.route('/api/generative-ai/project-description', methods=['POST'])
 def generate_completion():
     # Parse JSON data from the incoming POST request
     data = request.json
-    print(f"사용자 요청 데이터: {data}")
+    print(f"User request data: {data}")
 
     # Extract necessary fields from the request payload
     category = data.get("category", "")
@@ -50,7 +57,7 @@ def generate_completion():
         # Attempt to decode the formatted message into a proper JSON object
         result['full_message'] = json.loads(f'"{full_message}"')
     except json.JSONDecodeError as e:
-        print(f"JSON 디코딩 실패: {e}")
+        print(f"JSON decoding failed: {e}")
         result['full_message'] = full_message  # Fallback to raw message if decoding fails
 
     # Return the processed result as a JSON response to the client

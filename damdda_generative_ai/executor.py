@@ -44,7 +44,7 @@ class CompletionExecutor:
                                 continue
 
                             data = json.loads(json_data)
-                            print(f"API 응답 데이터: {data}")  # Debugging: log API response
+                            print(f"API response data: {data}")  # Debugging: log API response
 
                             # Append new message content if it's from the assistant
                             if "message" in data and data["message"]["role"] == "assistant":
@@ -59,13 +59,13 @@ class CompletionExecutor:
                                 ai_filter_data.extend(data["aiFilter"])
 
                         except json.JSONDecodeError:
-                            print(f"JSON 디코딩 실패: {decoded_line}")  # Handle JSON parsing errors
+                            print(f"Failed to decode JSON: {decoded_line}")  # Handle JSON parsing errors
                             continue
 
         except requests.exceptions.Timeout:
-            print("요청이 시간 내에 완료되지 않았습니다.")  # Handle request timeout
+            print("The request did not complete within the time limit.")  # Handle request timeout
         except requests.exceptions.RequestException as e:
-            print(f"요청 중 오류 발생: {e}")  # Handle any other request-related errors
+            print(f"An error occurred during the request: {e}")  # Handle any other request-related errors
 
         # Return the full message and any AI filter data collected from the API
         return {
