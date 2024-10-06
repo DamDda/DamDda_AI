@@ -23,7 +23,7 @@ pipeline {
                 sshagent (credentials: ['jenkins-ssh-credentials']) {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-idps-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh """
-                            ssh damdda@211.188.48.96 << EOF
+                            ssh damdda@211.188.48.96 << 'EOF'
                                 # Authenticate with Docker Hub on the remote server
                                 echo '${DOCKER_PASSWORD}' | docker login -u '${DOCKER_USERNAME}' --password-stdin
                                 
