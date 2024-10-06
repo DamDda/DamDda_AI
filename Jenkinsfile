@@ -24,20 +24,15 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-idps-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh """
                             ssh damdda@211.188.48.96 << 'EOF'
-                                # Authenticate with Docker Hub on the remote server
-                                echo '${DOCKER_PASSWORD}' | docker login -u '${DOCKER_USERNAME}' --password-stdin
-                                
-                                # Stop the existing container if running
-                                docker stop damdda-ai-flask-server || true
-                                # Remove the old container
-                                docker rm damdda-ai-flask-server || true
-                                
-                                # Pull the latest image from Docker Hub
-                                docker pull docker.io/pmhchris/damdda-ai-flask-server:latest
-                                
-                                # Start a new container from the latest image
-                                docker run -d --name damdda-ai-flask-server -p 5000:5000 docker.io/pmhchris/damdda-ai-flask-server:latest
-                            EOF
+echo '${DOCKER_PASSWORD}' | docker login -u '${DOCKER_USERNAME}' --password-stdin
+
+docker stop damdda-ai-flask-server || true
+docker rm damdda-ai-flask-server || true
+
+docker pull docker.io/pmhchris/damdda-ai-flask-server:latest
+
+docker run -d --name damdda-ai-flask-server -p 5000:5000 docker.io/pmhchris/damdda-ai-flask-server:latest
+EOF
                         """
                     }
                 }
