@@ -24,12 +24,10 @@ pipeline {
                     sh '''
                         ssh damdda@211.188.48.96 << EOF
                             # Log the Docker username for verification
-                            echo "DOCKER_USERNAME is: $DOCKER_USERNAME"
+                            echo "DOCKER_USERNAME is: ${DOCKER_USERNAME}"
                             
                             # Log in to Docker Hub using environment variables
-                            export DOCKER_USERNAME='${DOCKER_USERNAME}'
-                            export DOCKER_PASSWORD='${DOCKER_PASSWORD}'
-                            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                            echo $DOCKER_PASSWORD | docker login -u ${DOCKER_USERNAME} --password-stdin
                             
                             # Stop the running container if it exists
                             docker stop damdda-ai-flask-server || true
