@@ -39,13 +39,8 @@ def generate_completion():
     # Structure the request data for the API call
     request_data = prepare_request_data(prompt)
 
-    # Initialize the completion executor with API configuration
-    completion_executor = CompletionExecutor(
-        host=Config.HOST,
-        api_key=Config.API_KEY,
-        api_key_primary_val=Config.API_KEY_PRIMARY_VAL,
-        request_id=Config.REQUEST_ID
-    )
+    # Initialize the completion executor without passing any arguments
+    completion_executor = CompletionExecutor()
 
     # Execute the API call and retrieve the result
     result = completion_executor.execute(request_data)
