@@ -23,6 +23,9 @@ pipeline {
                 sshagent (credentials: ['jenkins-ssh-credentials']) {
                     sh '''
                         ssh damdda@211.188.48.96 << EOF
+                            # Log the Docker username for verification
+                            echo "DOCKER_USERNAME is: $DOCKER_USERNAME"
+                            
                             # Log in to Docker Hub using environment variables
                             export DOCKER_USERNAME='${DOCKER_USERNAME}'
                             export DOCKER_PASSWORD='${DOCKER_PASSWORD}'
