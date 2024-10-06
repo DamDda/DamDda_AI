@@ -1,17 +1,17 @@
-# Python 3.12-slim 이미지 기반으로 설정 (최소한의 라이브러리 포함)
+# Set up based on Python 3.12-slim image (includes minimal libraries)
 FROM python:3.12-slim
 
-# 컨테이너 내 작업 디렉토리 설정
+# Set working directory inside the container
 WORKDIR /app
 
-# 로컬의 requirements.txt 파일을 컨테이너로 복사
+# Copy the local requirements.txt file to the container
 COPY requirements.txt .
 
-# 필요한 Python 패키지들을 설치
+# Install the required Python packages
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 현재 디렉토리의 모든 파일을 컨테이너 내 작업 디렉토리로 복사
+# Copy all files from the current directory to the working directory in the container
 COPY . .
 
-# 컨테이너가 실행될 때 'run.py'를 실행
+# Execute 'run.py' when the container starts
 CMD ["python", "run.py"]
