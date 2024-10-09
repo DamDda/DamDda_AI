@@ -15,16 +15,18 @@ def generate_prompt(title: str, category: str, tags_list: list, description: str
     prompt = [
         {
             "role": "system",
-            "content": f"""다음 정보를 바탕으로 크라우드펀딩 프로젝트 상세 페이지를 작성하세요:
+            "content": """다음 정보를 바탕으로 '상세 설명' 섹션만 작성하세요:
             제목: {title}
             카테고리: {category}
             태그: {', '.join(tags_list)}
             설명: {description}
-            톤은 전문적이면서도 친근해야 하며, 고객의 관심을 끌 수 있는 마케팅 문구를 포함하세요."""
+            
+            상세 설명만 작성하세요. 상세 설명에서는 프로젝트의 구체적인 기능, 혜택, 특징 등을 전문적이면서도 친근한 톤으로 작성하세요. 고객의 관심을 끌 수 있는 마케팅 문구를 포함하세요."""
         }
     ]
-    return prompt
 
+    return prompt
+    
 
 def prepare_request_data(prompt: list) -> dict:
     """
