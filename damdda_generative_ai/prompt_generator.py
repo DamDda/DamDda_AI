@@ -15,7 +15,7 @@ def generate_prompt(title: str, category: str, tags_list: list, description: str
     prompt = [
         {
             "role": "system",
-            "content": """
+            "content": f"""
             제공된 정보를 바탕으로, 크라우드 펀딩 프로젝트의 주요 기능, 혜택, 특징을 소개하는 여러 개의 마케팅 문구와 그에 대한 간단한 설명을 작성하세요. 각 문구는 후원자들의 관심을 끌 수 있도록 설득력 있게 구성하고, 설명은 간결하면서도 정확하게 프로젝트의 특성을 전달하세요. 마케팅 문구는 **굵게**, 설명은 _기울임체_로 표시되도록 하세요. 불필요한 멘트는 생략하고, 자연스럽게 이어지는 구조로 작성하세요.
 
             제공된 정보:
@@ -33,8 +33,8 @@ def generate_prompt(title: str, category: str, tags_list: list, description: str
         }
     ]
 
-
     return prompt
+
     
 
 def prepare_request_data(prompt: list) -> dict:
