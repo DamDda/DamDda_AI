@@ -24,10 +24,6 @@ def generate_prompt(title: str, category: str, tags_list: list, description: str
             태그: {', '.join(tags_list)}
             설명: {description}
 
-            결과 형식:
-            마케팅 문구
-            간결한 설명
-
             참고 사항: 후원자들이 이 프로젝트가 크라우드 펀딩임을 인지하고, 그들의 참여가 중요한 이유를 자연스럽게 강조하세요.
             """
         }
@@ -53,7 +49,7 @@ def prepare_request_data(prompt: list) -> dict:
         'topP': 0.8,  # Controls nucleus sampling (higher = more diverse responses)
         'topK': 0,    # Controls top-K sampling (0 = disabled)
         'maxTokens': 523,  # Maximum number of tokens the model can return
-        'temperature': 0.5,  # Controls randomness in the response (0 = deterministic)
+        'temperature': 0.7,  # Controls randomness in the response (0 = deterministic)
         'repeatPenalty': 1.5,  # Penalty for repeating tokens
         'stopBefore': [],  # No specific stopping conditions
         'includeAiFilters': True,  # Whether to include AI filter data
